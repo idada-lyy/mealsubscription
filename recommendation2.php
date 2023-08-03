@@ -5,6 +5,9 @@ include("connection/connect.php");
 error_reporting(0);
 session_start();
 
+$checkAllergies = mysqli_query($db, "SELECT dishes.allergies FROM dishes LEFT JOIN users_orders ON dishes.title = users_orders.title WHERE users_orders.u_id ='" . $_SESSION['user_id'] . "' GROUP BY dishes.allergies LIMIT 1");
+$allergiesValue = mysqli_fetch_array($checkAllergies);
+
 $allergies = $_GET['allergies'];
 $diets = $_GET['diets'];
 $keyword = $_GET['keyword'];
@@ -27,10 +30,151 @@ if (!empty($diets)) {
     $sql .= " (diets IS NULL OR diets LIKE '%" . $diets . "%') ";
 }
 
-$sql .= "ORDER BY d_id DESC LIMIT 12";
+$sql .= "ORDER BY rating DESC LIMIT 6";
 $query_res = mysqli_query($db, $sql);
 
+$totalstars= mysqli_query($db,"select rating from dishes");
+$getreviews= mysqli_query($db,"select * from review");
+$userPreferences= mysqli_query($db,"select users.preference from users");
+$userRatings= mysqli_query($db,"select review.u_id from review");
+$numRecommendations = mysqli_num_rows(mysqli_query($db, "SELECT * FROM review WHERE d_id='$r[d_id]'"));
+
+$avg_rating
+
+
+$query1 = "SELECT column1, column2 FROM table1 WHERE condition1";
+$query2 = "SELECT column3, column4 FROM table2 WHERE condition2";
+
+$combinedQuery = $query1 . " INNER JOIN " . $query2 . " ON table1.columnX = table2.columnY";
+mysqli_query($db, "SELECT * FROM review INNER JOIN users ON users.u_id=review.u_id WHERE d_id='$r[d_id]'");
+
+$result = mysqli_query($db, $combinedQuery);
+
+function collaborativeFiltering($db, $u_id, $numRecommendations, $totalstars) {
+    // Step 1: Calculate Similarity
+    //$query = "SELECT u_id, AVG(rating) as avg_rating FROM review GROUP BY u_id";
+    //$result = mysqli_query($db, $query);
+
+    //$userRatings = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $userRatings[$row['u_id']] = $row['avg_rating'];
+    }
+
+    $targetUserRatings = $userRatings[$user_id];
+
+    $similarities = array();
+    foreach ($userRatings as $otherUser => $rating) {
+        if ($otherUser != $user_id) {
+            $similarity = calculateSimilarity($db, $targetUserRatings, $otherUser);
+            $similarities[$otherUser] = $similarity;
+        }
+    }
+
+    // Step 2: Find Similar Users
+    arsort($similarities); // Sort in descending order
+    $similarUsers = array_slice(array_keys($similarities), 0, $numRecommendations);
+
+    // Step 3: Generate Recommendations
+    $recommendations = array();
+    foreach ($similarUsers as $user) {
+        $query = "SELECT d_id, AVG(rating) as avg_rating FROM review WHERE u_id='$user' GROUP BY d_id";
+        $result = mysqli_query($db, $query);
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $restaurant = $row['d_id'];
+            $rating = $row['avg_rating'];
+            if (!isset($targetUserRatings[$restaurant])) {
+                $recommendations[$restaurant] = $rating;
+            }
+        }
+    }
+
+    // Step 4: Return Recommendations
+    arsort($recommendations); // Sort in descending order based on ratings
+    $recommendedRestaurants = array_keys(array_slice($recommendations, 0, $numRecommendations));
+
+    return $recommendedRestaurants;
+}
+
+function calculateSimilarity($db, $targetUserRatings, $otherUser) {
+    // Implement similarity calculation (e.g., Pearson correlation) between two users
+    // Use SQL queries to fetch data from the database and perform calculations
+    // Return the similarity score between the target user and other user
+
+    // Example of Pearson correlation calculation (you can modify this based on your data model):
+    $query = "SELECT d_id, rating FROM review WHERE u_id='$otherUser' AND d_id IN (" . implode(",", array_keys($targetUserRatings)) . ")";
+    $result = mysqli_query($db, $query);
+
+    $ratings = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $ratings[$row['d_id']] = $row['rating'];
+    }
+
+    // Calculate Pearson correlation
+    $numerator = 0;
+    $denominator1 = 0;
+    $denominator2 = 0;
+
+    foreach ($targetUserRatings as $restaurant => $rating1) {
+        if (isset($ratings[$restaurant])) {
+            $rating2 = $ratings[$restaurant];
+            $numerator += ($rating1 - $targetUserRatings['avg_rating']) * ($rating2 - $ratings['avg_rating']);
+            $denominator1 += pow(($rating1 - $targetUserRatings['avg_rating']), 2);
+            $denominator2 += pow(($rating2 - $ratings['avg_rating']), 2);
+        }
+    }
+
+    if ($denominator1 == 0 || $denominator2 == 0) {
+        return 0.0;
+    }
+
+    $similarity = $numerator / (sqrt($denominator1) * sqrt($denominator2));
+
+    return $similarity;
+}
+
+
+
+function contentBasedFiltering($userPreferences, $numRecommendations) {
+    // Implement content-based filtering algorithm here
+    // Use userPreferences to find restaurants with similar attributes
+    // Return an array of recommended restaurants for the user
+    // based on content-based filtering
+}
+
+
+function hybridRecommendations($userPreferences, $userRatings, $numRecommendations) {
+    // Get collaborative filtering recommendations for the user
+    $collaborativeRecommendations = collaborativeFiltering($userRatings, $userPreferences['u_id'], $numRecommendations);
+
+    // Get content-based filtering recommendations for the user
+    $contentBasedRecommendations = contentBasedFiltering($userPreferences, $numRecommendations);
+
+    // Combine the recommendations (you can use different strategies, e.g., weighted average)
+    $hybridRecommendations = array_merge($collaborativeRecommendations, $contentBasedRecommendations);
+
+    // Return the final list of hybrid recommendations
+    return $hybridRecommendations;
+}
+
+
+
+// Call the hybrid recommendation function
+$hybridRecommendations = hybridRecommendations($userPreferences, $userRatings, $getreviews);
+
+// Display the recommendations on your website
+//echo "<h3>Recommended Restaurants:</h3>";
+//echo "<ul>";
+//foreach ($hybridRecommendations as $restaurant => $score) {
+//    echo "<li>$restaurant (Score: $score)</li>";
+//}
+//echo "</ul>";
+
 ?>
+
+
+
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -54,68 +198,11 @@ include("header.html");
 ?>
 
 
-<section style="padding: 110px 0 15px 0 ">
-    <div class="container">
-        <form action='' method='get' enctype="multipart/form-data">
-            <div class="form-body">
-
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <input type="text" name="keyword"
-                               class="form-control" placeholder="Search">
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <select name="allergies" class="form-control custom-select"
-                                data-placeholder="Choose a Category" tabindex="1">
-                            <option value="">-- Allergies --</option>
-                            <option value="milk">Milk</option>
-                            <option value="eggs">Eggs</option>
-                            <option value="peanuts">Peanuts</option>
-                            <option value="tree-nuts">Tree Nuts</option>
-                            <option value="soy">Soy</option>
-                            <option value="fish">Fish</option>
-                            <option value="shellfish">Shellfish</option>
-                            <option value="wheat">Wheat</option>
-                            <option value="celery">Celery</option>
-                            <option value="strawberries">Strawberries</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <select name="diets" class="form-control custom-select"
-                                data-placeholder="Choose a diets" tabindex="1">
-                            <option value="">-- Diets --</option>
-                            <option value="ketogenic">Ketogenic</option>
-                            <option value="vegan">Vegan</option>
-                            <option value="pescatarian">Pescatarian</option>
-                            <option value="gluten-free">Gluten Free</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <div class="form-actions">
-                            <input type="submit" name="submit" class="btn btn-primary" value="Submit">
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </form>
-    </div>
-</section>
-
 <section class="popular">
     <div class="container">
         <div class="title text-xs-center m-b-30">
-            <div class="h2overwrite">Welcome !</div>
-            <p class="lead">Easiest way to order your favourite food</p>
+            <div class="h2overwrite">Recommended by others</div>
+            <p class="lead">Easiest way to order your favourite food among these top 6 dishes</p>
         </div>
         <div class="row">
             <?php
@@ -201,7 +288,7 @@ include("header.html");
     </div>
 </section>
 
-<section class="hero bg-image" data-image-src="images/img/pimgg.jpg">
+<section class="hero bg-image" data-image-src="images/img/pimg.jpg">
     <div class="hero-inner">
         <div class="container text-center hero-text font-white">
             <h1>Order Delivery & Take-Out</h1>
@@ -307,49 +394,6 @@ include("header.html");
 
 
     </div>
-</section>
-
-<section class="hero bg-image" data-image-src="images/img/rec.jpg">
-    <div class="hero-inner">
-        <div class="container text-center hero-text font-white">
-            <h1>Not sure what to order?</h1>
-
-            <div class="banner-form">
-            <a  href="recommendation.php"
-                class="btn theme-btn"
-                style="color:#ffffff; width: 180px;">Recommend Me !</a>
-
-                <form class="form-inline">
-
-                </form>
-            </div>
-            <div class="steps">
-                <div class="step-item step">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 483 483" width="512" height="512">
-                        <g fill="#FFF">
-                        </g>
-                    </svg>
-                    <h4><span style="color:white;"></span></h4></div>
-
-                <div class="step-item step">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewbox="0 0 380.721 380.721">
-                        <g fill="#FFF">
-                        </g>
-                    </svg>
-                    <h4><span style="color:white;"></span></h4></div>
-
-                <div class="step-item step">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewbox="0 0 612.001 612">
-                        
-                    </svg>
-                    <h4><span style="color:white;"></span></h4>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
 </section>
 
 
