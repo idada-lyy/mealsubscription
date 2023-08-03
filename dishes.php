@@ -22,46 +22,19 @@ include_once 'product-action.php';
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/animsition.min.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/styler.css" rel="stylesheet">
 </head>
 
 <body>
 
-<header id="header" class="header-scroll top-header headrom">
-    <nav class="navbar navbar-dark">
-        <div class="container">
-            <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse"
-                    data-target="#mainNavbarCollapse">&#9776;
-            </button>
-            <a class="navbar-brand" href="index.php"> <img class="img-rounded" src="images/icn.png" alt=""> </a>
-            <div class="collapse navbar-toggleable-md  float-lg-right" id="mainNavbarCollapse">
-                <ul class="nav navbar-nav">
-                    <li class="nav-item"><a class="nav-link active" href="index.php">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link active" href="restaurants.php">Restaurants <span
-                                    class="sr-only"></span></a></li>
-
-                    <?php
-                    if (empty($_SESSION["user_id"])) {
-                        echo '<li class="nav-item"><a href="login.php" class="nav-link active">Login</a> </li>
-							  <li class="nav-item"><a href="registration.php" class="nav-link active">Register</a> </li>';
-                    } else {
+<?php
+include("header.html");
+?>
 
 
-                        echo '<li class="nav-item"><a href="your_orders.php" class="nav-link active">My Orders</a> </li>';
-                        echo '<li class="nav-item"><a href="logout.php" class="nav-link active">Logout</a> </li>';
-                    }
-
-                    ?>
-
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
 <div class="page-wrapper">
-    <div class="top-links">
-        <div class="container">
+    <div class="top-links"  style="padding: 2px 0 2px 0 ">
+        <div class="container" style="padding: 18px 0 10px 0;">
             <ul class="row links">
 
                 <li class="col-xs-12 col-sm-4 link-item"><span>1</span><a href="restaurants.php">Choose Restaurant</a>
@@ -77,7 +50,7 @@ include_once 'product-action.php';
     $rows = mysqli_fetch_array($ress);
 
     ?>
-    <section class="inner-page-hero bg-image" data-image-src="images/img/restrrr.png">
+    <section class="inner-page-hero bg-image" data-image-src="images/img/restrr.png">
         <div class="profile">
             <div class="container">
                 <div class="row">
@@ -89,7 +62,7 @@ include_once 'product-action.php';
 
                     <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 profile-desc">
                         <div class="pull-left right-text white-txt">
-                            <h6><a href="#"><?php echo $rows['title']; ?></a></h6>
+                            <div><a href="#"  class="secondoverwrite"><?php echo $rows['title']; ?></a></div>
                             <p><?php echo $rows['address']; ?></p>
                         </div>
                     </div>
@@ -99,11 +72,7 @@ include_once 'product-action.php';
             </div>
         </div>
     </section>
-    <div class="breadcrumb">
-        <div class="container">
 
-        </div>
-    </div>
     <div class="container m-t-30">
         <div class="row">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
@@ -140,7 +109,7 @@ include_once 'product-action.php';
                                     <div class="form-group row no-gutter">
                                         <div class="col-xs-8">
                                             <input type="text" class="form-control b-r-0"
-                                                   value=<?php echo "$" . $item["price"]; ?> readonly
+                                                   value=<?php echo "RM" . $item["price"]; ?> readonly
                                                    id="exampleSelect1">
 
                                         </div>
@@ -201,7 +170,7 @@ include_once 'product-action.php';
                         <div class="widget-body">
                             <div class="price-wrap text-xs-center">
                                 <p>TOTAL</p>
-                                <h3 class="value"><strong><?php echo "$" . $item_total; ?></strong></h3>
+                                <h3 class="value"><strong><?php echo "RM" . $item_total; ?></strong></h3>
                                 <p>Free Delivery!</p>
                                 <?php
                                 if ($item_total == 0) {
@@ -250,8 +219,6 @@ include_once 'product-action.php';
                         $products = $stmt->get_result();
                         if (!empty($products)) {
                             foreach ($products as $product) {
-
-
                                 ?>
                                 <div class="food-item">
                                     <div class="row">
@@ -272,11 +239,9 @@ include_once 'product-action.php';
                                                     <h6 style="font-weight: bold">Ingredients</h6>
                                                     <p> <?php echo $product['ingredients']; ?></p>
                                                 </div>
-
                                         </div>
-
                                         <div class="col-xs-12 col-sm-12 col-lg-3 pull-right item-cart-info">
-                                            <span class="price pull-left">$<?php echo $product['price']; ?></span>
+                                            <span class="price pull-left">RM<?php echo $product['price']; ?></span>
                                             <input class="b-r-0" type="text" name="quantity" style="margin-left:30px;"
                                                    value="1" size="2"/>
                                             <input type="submit" class="btn theme-btn" style="margin-left:40px;"
@@ -284,17 +249,11 @@ include_once 'product-action.php';
                                         </div>
                                         </form>
                                     </div>
-
                                 </div>
-
-
                                 <?php
                             }
                         }
-
                         ?>
-
-
                     </div>
 
                 </div>
@@ -306,194 +265,9 @@ include_once 'product-action.php';
 
     </div>
 
-    <footer class="footer">
-        <div class="container">
-
-            <div class="row bottom-footer">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-3 payment-options color-gray">
-                            <h5>Payment Options</h5>
-                            <ul>
-                                <li>
-                                    <a href="#"> <img src="images/paypal.png" alt="Paypal"> </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <img src="images/mastercard.png" alt="Mastercard"> </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <img src="images/maestro.png" alt="Maestro"> </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <img src="images/stripe.png" alt="Stripe"> </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <img src="images/bitcoin.png" alt="Bitcoin"> </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-xs-12 col-sm-4 address color-gray">
-                            <h5>Address</h5>
-                            <p>Nairobi KENYA</p>
-                            <h5>Phone: +25424700079</a></h5></div>
-                        <div class="col-xs-12 col-sm-5 additional-info color-gray">
-                            <h5>Addition informations</h5>
-                            <p>Join thousands of other restaurants who benefit from having partnered with us.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </footer>
-
-</div>
-
-</div>
-
-
-<div class="modal fade" id="order-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-            <div class="modal-body cart-addon">
-                <div class="food-item white">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-lg-6">
-                            <div class="item-img pull-left">
-                                <a class="restaurant-logo pull-left" href="#"><img src="http://placehold.it/70x70"
-                                                                                   alt="Food logo"></a>
-                            </div>
-
-                            <div class="rest-descr">
-                                <h6><a href="#">Sandwich de Alegranza Grande Menü (28 - 30 cm.)</a></h6></div>
-
-                        </div>
-
-                        <div class="col-xs-6 col-sm-2 col-lg-2 text-xs-center"><span
-                                    class="price pull-left">$ 2.99</span></div>
-                        <div class="col-xs-6 col-sm-4 col-lg-4">
-                            <div class="row no-gutter">
-                                <div class="col-xs-7">
-                                    <select class="form-control b-r-0" id="exampleSelect2">
-                                        <option>Size SM</option>
-                                        <option>Size LG</option>
-                                        <option>Size XL</option>
-                                    </select>
-                                </div>
-                                <div class="col-xs-5">
-                                    <input class="form-control" type="number" value="0" id="quant-input-2"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="food-item">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-lg-6">
-                            <div class="item-img pull-left">
-                                <a class="restaurant-logo pull-left" href="#"><img src="http://placehold.it/70x70"
-                                                                                   alt="Food logo"></a>
-                            </div>
-
-                            <div class="rest-descr">
-                                <h6><a href="#">Sandwich de Alegranza Grande Menü (28 - 30 cm.)</a></h6></div>
-
-                        </div>
-
-                        <div class="col-xs-6 col-sm-2 col-lg-2 text-xs-center"><span
-                                    class="price pull-left">$ 2.49</span></div>
-                        <div class="col-xs-6 col-sm-4 col-lg-4">
-                            <div class="row no-gutter">
-                                <div class="col-xs-7">
-                                    <select class="form-control b-r-0" id="exampleSelect3">
-                                        <option>Size SM</option>
-                                        <option>Size LG</option>
-                                        <option>Size XL</option>
-                                    </select>
-                                </div>
-                                <div class="col-xs-5">
-                                    <input class="form-control" type="number" value="0" id="quant-input-3"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="food-item">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-lg-6">
-                            <div class="item-img pull-left">
-                                <a class="restaurant-logo pull-left" href="#"><img src="http://placehold.it/70x70"
-                                                                                   alt="Food logo"></a>
-                            </div>
-
-                            <div class="rest-descr">
-                                <h6><a href="#">Sandwich de Alegranza Grande Menü (28 - 30 cm.)</a></h6></div>
-
-                        </div>
-
-                        <div class="col-xs-6 col-sm-2 col-lg-2 text-xs-center"><span
-                                    class="price pull-left">$ 1.99</span></div>
-                        <div class="col-xs-6 col-sm-4 col-lg-4">
-                            <div class="row no-gutter">
-                                <div class="col-xs-7">
-                                    <select class="form-control b-r-0" id="exampleSelect5">
-                                        <option>Size SM</option>
-                                        <option>Size LG</option>
-                                        <option>Size XL</option>
-                                    </select>
-                                </div>
-                                <div class="col-xs-5">
-                                    <input class="form-control" type="number" value="0" id="quant-input-4"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="food-item">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-lg-6">
-                            <div class="item-img pull-left">
-                                <a class="restaurant-logo pull-left" href="#"><img src="http://placehold.it/70x70"
-                                                                                   alt="Food logo"></a>
-                            </div>
-
-                            <div class="rest-descr">
-                                <h6><a href="#">Sandwich de Alegranza Grande Menü (28 - 30 cm.)</a></h6></div>
-
-                        </div>
-
-                        <div class="col-xs-6 col-sm-2 col-lg-2 text-xs-center"><span
-                                    class="price pull-left">$ 3.15</span></div>
-                        <div class="col-xs-6 col-sm-4 col-lg-4">
-                            <div class="row no-gutter">
-                                <div class="col-xs-7">
-                                    <select class="form-control b-r-0" id="exampleSelect6">
-                                        <option>Size SM</option>
-                                        <option>Size LG</option>
-                                        <option>Size XL</option>
-                                    </select>
-                                </div>
-                                <div class="col-xs-5">
-                                    <input class="form-control" type="number" value="0" id="quant-input-5"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn theme-btn">Add To Cart</button>
-            </div>
-        </div>
-    </div>
-</div>
+    <?php
+include("footer.html");
+?>
 
 <script src="js/jquery.min.js"></script>
 <script src="js/tether.min.js"></script>

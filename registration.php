@@ -13,6 +13,7 @@ if(isset($_POST['submit'] ))
 		empty($_POST['phone'])||
 		empty($_POST['password'])||
 		empty($_POST['cpassword']) ||
+      empty($_POST['preference']) ||
 		empty($_POST['cpassword']))
 		{
 			$message = "All fields must be Required!";
@@ -53,11 +54,15 @@ if(isset($_POST['submit'] ))
 	else{
        
 	 
-	$mql = "INSERT INTO users(username,f_name,l_name,email,phone,password,address) VALUES('".$_POST['username']."','".$_POST['firstname']."','".$_POST['lastname']."','".$_POST['email']."','".$_POST['phone']."','".md5($_POST['password'])."','".$_POST['address']."')";
+	$mql = "INSERT INTO users(username,f_name,l_name,email,phone,password,address,preference) 
+            VALUES('".$_POST['username']."','".$_POST['firstname']."','".$_POST['lastname']."','".$_POST['email']."','".$_POST['phone']."','".md5($_POST['password'])."','".$_POST['address']."','".$_POST['preference']."')";
 	mysqli_query($db, $mql);
 	
 		 header("refresh:0.1;url=login.php");
     }
+    
+
+
 	}
 
 }
@@ -78,40 +83,12 @@ if(isset($_POST['submit'] ))
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/animsition.min.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet"> </head>
+    <link href="css/styler.css" rel="stylesheet"> </head>
 <body>
-<div style=" background-image: url('images/img/pimg.jpg');">
-         <header id="header" class="header-scroll top-header headrom">
-            <nav class="navbar navbar-dark">
-               <div class="container">
-                  <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#mainNavbarCollapse">&#9776;</button>
-                  <a class="navbar-brand" href="index.php"> <img class="img-rounded" src="images/icn.png" alt=""> </a>
-                  <div class="collapse navbar-toggleable-md  float-lg-right" id="mainNavbarCollapse">
-                     <ul class="nav navbar-nav">
-							<li class="nav-item"> <a class="nav-link active" href="index.php">Home <span class="sr-only">(current)</span></a> </li>
-                            <li class="nav-item"> <a class="nav-link active" href="restaurants.php">Restaurants <span class="sr-only"></span></a> </li>
-                            
-							<?php
-						if(empty($_SESSION["user_id"]))
-							{
-								echo '<li class="nav-item"><a href="login.php" class="nav-link active">Login</a> </li>
-							  <li class="nav-item"><a href="registration.php" class="nav-link active">Register</a> </li>';
-							}
-						else
-							{
-									
-									
-										echo  '<li class="nav-item"><a href="your_orders.php" class="nav-link active">My Orders</a> </li>';
-									echo  '<li class="nav-item"><a href="logout.php" class="nav-link active">Logout</a> </li>';
-							}
-
-						?>
-							 
-                        </ul>
-                  </div>
-               </div>
-            </nav>
-         </header>
+<div style=" background-image: url('images/img/pimgg.jpg');">
+<?php
+include("header.html");
+?>
          <div class="page-wrapper">
             
                <div class="container">
@@ -158,18 +135,35 @@ if(isset($_POST['submit'] ))
                                        <label for="exampleInputPassword1">Confirm password</label>
                                        <input type="password" class="form-control" name="cpassword" id="exampleInputPassword2"> 
                                     </div>
-									 <div class="form-group col-sm-12">
+									 <div class="form-group col-sm-6">
                                        <label for="exampleTextarea">Delivery Address</label>
-                                       <textarea class="form-control" id="exampleTextarea"  name="address" rows="3"></textarea>
+                                       <input class="form-control" id="exampleTextarea"  name="address"></input>
                                     </div>
-                                   
-                                 </div>
-                                
-                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="form-group col-sm-6">
+                                       <label for="exampleTextarea">Preference</label>
+                                       <select name="preference" class="form-control custom-select" data-placeholder="Choose a preference" tabindex="1">
+                                          <option value="">None</option>
+                                          <option value="milk">Allergic to Milk</option>
+                                          <option value="eggs">Allergic to Eggs</option>
+                                          <option value="peanuts">Allergic to Peanuts</option>
+                                          <option value="tree-nuts">Allergic to Tree Nuts</option>
+                                          <option value="soy">Allergic to Soy</option>
+                                          <option value="fish">Allergic to Fish</option>
+                                          <option value="shellfish">Allergic to Shellfish</option>
+                                          <option value="wheat">Allergic to Wheat</option>
+                                          <option value="celery">Allergic to Celery</option>
+                                          <option value="strawberries">Allergic to Strawberries</option>
+                                          <option value="ketogenic">Ketogenic Diet</option>
+                                          <option value="vegan">Vegan Diet</option>
+                                          <option value="pescatarian">Pescatarian Diet</option>
+                                          <option value="gluten-free">Gluten Free Diet</option>
+                                       </select>
+                                    </div>
+
+                                    <div class="col-sm-6">
                                        <p> <input type="submit" value="Register" name="submit" class="btn theme-btn"> </p>
                                     </div>
-                                 </div>
+                                
                               </form>
                   
 						   </div>
@@ -183,46 +177,9 @@ if(isset($_POST['submit'] ))
             </section>
             
       
-            <footer class="footer">
-               <div class="container">
-           
-                  <div class="row bottom-footer">
-                     <div class="container">
-                        <div class="row">
-                           <div class="col-xs-12 col-sm-3 payment-options color-gray">
-                              <h5>Payment Options</h5>
-                              <ul>
-                                 <li>
-                                    <a href="#"> <img src="images/paypal.png" alt="Paypal"> </a>
-                                 </li>
-                                 <li>
-                                    <a href="#"> <img src="images/mastercard.png" alt="Mastercard"> </a>
-                                 </li>
-                                 <li>
-                                    <a href="#"> <img src="images/maestro.png" alt="Maestro"> </a>
-                                 </li>
-                                 <li>
-                                    <a href="#"> <img src="images/stripe.png" alt="Stripe"> </a>
-                                 </li>
-                                 <li>
-                                    <a href="#"> <img src="images/bitcoin.png" alt="Bitcoin"> </a>
-                                 </li>
-                              </ul>
-                           </div>
-                           <div class="col-xs-12 col-sm-4 address color-gray">
-                                    <h5>Address</h5>
-                                    <p>Nairobi KENYA</p>
-                                    <h5>Phone: +25424700079</a></h5> </div>
-                                <div class="col-xs-12 col-sm-5 additional-info color-gray">
-                                    <h5>Addition informations</h5>
-                                   <p>Join thousands of other restaurants who benefit from having partnered with us.</p>
-                                </div>
-                        </div>
-                     </div>
-                  </div>
-      
-               </div>
-            </footer>
+            <?php
+include("footer.html");
+?>
          
          </div>
        

@@ -54,7 +54,7 @@ if (isset($_POST['submit'])) {
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/animsition.min.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/styler.css" rel="stylesheet">
     <style type="text/css" rel="stylesheet">
 
 
@@ -98,80 +98,8 @@ if (isset($_POST['submit'])) {
             color: #777;
         }
 
-        /*
-        table {
-            width: 750px;
-            border-collapse: collapse;
-            margin: auto;
-
-            }
-
-        /* Zebra striping */
-        /* tr:nth-of-type(odd) {
-            background: #eee;
-            }
-
-        th {
-            background: #404040;
-            color: white;
-            font-weight: bold;
-
-            }
-
-        td, th {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: left;
-            font-size: 14px;
-
-            } */
-        *
-
-        /
-
-
         @media only screen and (max-width: 760px),
         (min-device-width: 768px) and (max-device-width: 1024px) {
-
-            /* table {
-                  width: 100%;
-            }
-
-
-            table, thead, tbody, th, td, tr {
-                display: block;
-            } */
-            /* thead tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-
-            tr { border: 1px solid #ccc; } */
-            /* td {
-
-                border: none;
-                border-bottom: 1px solid #eee;
-                position: relative;
-                padding-left: 50%;
-            }
-
-            td:before {
-
-                position: absolute;
-
-                top: 6px;
-                left: 6px;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-
-                content: attr(data-column);
-
-                color: #000;
-                font-weight: bold;
-            } */
-
         }
 
 
@@ -184,55 +112,23 @@ if (isset($_POST['submit'])) {
 
 <header id="header" class="header-scroll top-header headrom">
 
-    <nav class="navbar navbar-dark">
-        <div class="container">
-            <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse"
-                    data-target="#mainNavbarCollapse">&#9776;
-            </button>
-            <a class="navbar-brand" href="index.php"> <img class="img-rounded" src="images/icn.png" alt=""> </a>
-            <div class="collapse navbar-toggleable-md  float-lg-right" id="mainNavbarCollapse">
-                <ul class="nav navbar-nav">
-                    <li class="nav-item"><a class="nav-link active" href="index.php">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link active" href="restaurants.php">Restaurants <span
-                                    class="sr-only"></span></a></li>
+<body class="home">
 
-                    <?php
-                    if (empty($_SESSION["user_id"])) {
-                        echo '<li class="nav-item"><a href="login.php" class="nav-link active">Login</a> </li>
-							  <li class="nav-item"><a href="registration.php" class="nav-link active">Register</a> </li>';
-                    } else {
-
-
-                        echo '<li class="nav-item"><a href="your_orders.php" class="nav-link active">My Orders</a> </li>';
-                        echo '<li class="nav-item"><a href="logout.php" class="nav-link active">Logout</a> </li>';
-                    }
-
-                    ?>
-
-                </ul>
-            </div>
-        </div>
-    </nav>
+<?php
+include("header.html");
+?>
 
 </header>
 <div class="page-wrapper">
 
 
-    <div class="inner-page-hero bg-image" data-image-src="images/img/pimg.jpg">
+    <div class="inner-page-hero bg-image" data-image-src="images/img/pimgg.jpg">
         <div class="container"></div>
 
     </div>
-    <div class="result-show">
-        <div class="container">
-            <div class="row">
 
 
-            </div>
-        </div>
-    </div>
-
-    <section class="restaurants-page">
+    <section class="restaurants-page"  style="padding: 35px 0 25px 0 ">
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
@@ -241,7 +137,7 @@ if (isset($_POST['submit'])) {
                     <div class="bg-gray">
                         <div class="row">
 
-                            <table class="table table-bordered table-hover">
+                            <table class="table table-bordered table-hover" style="background:#ffffff; ">
                                 <thead style="background: #404040; color:white;">
                                 <tr>
                                     <th>Item</th>
@@ -259,7 +155,6 @@ if (isset($_POST['submit'])) {
 
 
                                 <?php
-
                                 $query_res = mysqli_query($db, "select * from users_orders where u_id='" . $_SESSION['user_id'] . "'");
                                 if (!mysqli_num_rows($query_res) > 0) {
                                     echo '<td colspan="6"><center>You have No orders Placed yet. </center></td>';
@@ -273,11 +168,11 @@ if (isset($_POST['submit'])) {
                                         ?>
                                         <tr>
                                             <td data-column="Item"> <?php echo $row['title']; ?></td>
-                                            <td data-column="Restaurant"> <?php echo $restaurant['title'] ? $restaurant['title'] : "-"; ?></td>
+                                            <td data-column="Restaurant"> <?php echo $restaurant['title'] ? $restaurant['title'] : "Null"; ?></td>
                                             <td data-column="Quantity"> <?php echo $row['quantity']; ?></td>
                                             <td data-column="price">$<?php echo $row['price']; ?></td>
                                             <td data-column="price">
-                                                <?php echo $row['subscription'] ? $row['subscription'] : "Not subscribed"; ?></td>
+                                                <?php echo $row['subscription'] ? $row['subscription'] : "Null"; ?></td>
                                             <td data-column="status">
                                                 <?php
                                                 $status = $row['status'];
@@ -315,7 +210,7 @@ if (isset($_POST['submit'])) {
                                                 }
                                                 ?>
                                             </td>
-                                            <td data-column="receiveDatetime"> <?php echo $row['receiveDatetime'] ? $row['receiveDatetime'] : "-"; ?></td>
+                                            <td data-column="receiveDatetime"> <?php echo $row['receiveDatetime'] ? $row['receiveDatetime'] : "Null"; ?></td>
                                             <td data-column="Date"> <?php echo $row['date']; ?></td>
                                             <td data-column="Action">
                                                 <?php
@@ -438,44 +333,9 @@ if (isset($_POST['submit'])) {
 </section>
 
 
-<footer class="footer">
-    <div class="row bottom-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-sm-3 payment-options color-gray">
-                    <h5>Payment Options</h5>
-                    <ul>
-                        <li>
-                            <a href="#"> <img src="images/paypal.png" alt="Paypal"> </a>
-                        </li>
-                        <li>
-                            <a href="#"> <img src="images/mastercard.png" alt="Mastercard"> </a>
-                        </li>
-                        <li>
-                            <a href="#"> <img src="images/maestro.png" alt="Maestro"> </a>
-                        </li>
-                        <li>
-                            <a href="#"> <img src="images/stripe.png" alt="Stripe"> </a>
-                        </li>
-                        <li>
-                            <a href="#"> <img src="images/bitcoin.png" alt="Bitcoin"> </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-xs-12 col-sm-4 address color-gray">
-                    <h5>Address</h5>
-                    <p>Nairobi KENYA</p>
-                    <h5>Phone: +25424700079</a></h5></div>
-                <div class="col-xs-12 col-sm-5 additional-info color-gray">
-                    <h5>Addition informations</h5>
-                    <p>Join thousands of other restaurants who benefit from having partnered with us.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    </div>
-</footer>
+<?php
+include("footer.html");
+?>
 
 </div>
 

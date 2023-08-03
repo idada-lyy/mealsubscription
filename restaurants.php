@@ -17,41 +17,13 @@ session_start();
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/animsition.min.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet"> </head>
+    <link href="css/styler.css" rel="stylesheet"> </head>
 
 <body>
 
-        <header id="header" class="header-scroll top-header headrom">
-            <nav class="navbar navbar-dark">
-                <div class="container">
-                    <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#mainNavbarCollapse">&#9776;</button>
-                    <a class="navbar-brand" href="index.php"> <img class="img-rounded" src="images/icn.png" alt=""> </a>
-                    <div class="collapse navbar-toggleable-md  float-lg-right" id="mainNavbarCollapse">
-                        <ul class="nav navbar-nav">
-                            <li class="nav-item"> <a class="nav-link active" href="index.php">Home <span class="sr-only">(current)</span></a> </li>
-                            <li class="nav-item"> <a class="nav-link active" href="restaurants.php">Restaurants <span class="sr-only"></span></a> </li>
-                            
-							<?php
-						if(empty($_SESSION["user_id"]))
-							{
-								echo '<li class="nav-item"><a href="login.php" class="nav-link active">Login</a> </li>
-							  <li class="nav-item"><a href="registration.php" class="nav-link active">Register</a> </li>';
-							}
-						else
-							{
-									
-									
-										echo  '<li class="nav-item"><a href="your_orders.php" class="nav-link active">My Orders</a> </li>';
-									echo  '<li class="nav-item"><a href="logout.php" class="nav-link active">Logout</a> </li>';
-							}
-
-						?>
-							 
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </header>
+<?php
+include("header.html");
+?>
         <div class="page-wrapper">
             <div class="top-links">
                 <div class="container">
@@ -63,24 +35,22 @@ session_start();
                     </ul>
                 </div>
             </div>
-            <div class="inner-page-hero bg-image" data-image-src="images/img/pimg.jpg">
+            <div class="inner-page-hero bg-image" data-image-src="images/img/pimgg.jpg">
                 <div class="container"> </div>
             </div>
-            <div class="result-show">
-                <div class="container">
-                    <div class="row">     
-                    </div>
-                </div>
-            </div>
-            <section class="restaurants-page">
+
+            <section class="restaurants-page"  style="padding: 40px 0 25px 0 ">
                 <div class="container">
                     <div class="row">
+                        <!--
                         <div class="col-xs-12 col-sm-5 col-md-5 col-lg-3">
                         </div>
-                        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-9">
+                !-->
+                        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-12">
                             <div class="bg-gray restaurant-entry">
                                 <div class="row">
-								<?php $ress= mysqli_query($db,"select * from restaurant");
+								<?php 
+                                    $ress= mysqli_query($db,"select * from restaurant");
 									      while($rows=mysqli_fetch_array($ress))
 										  {
 													
@@ -91,7 +61,7 @@ session_start();
 															</div>
 															<!-- end:Logo -->
 															<div class="entry-dscr">
-																<h5><a href="dishes.php?res_id='.$rows['rs_id'].'" >'.$rows['title'].'</a></h5> <span>'.$rows['address'].'</span>
+																<div class="secondoverwrite"><a href="dishes.php?res_id='.$rows['rs_id'].'"  style="color:#000000;">'.$rows['title'].'</a></div> <span>'.$rows['address'].'</span>
 																
 															</div>
 															<!-- end:Entry description -->
@@ -111,59 +81,16 @@ session_start();
 						?>
                                     
                                 </div>
-                
                             </div>
-                         
-                            
-                                
-                            </div>
-                          
-                          
-                           
+                        </div>
                         </div>
                     </div>
                 </div>
             </section>
        
-        <footer class="footer">
-            <div class="container">
-                
-              
-                <div class="bottom-footer">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-3 payment-options color-gray">
-                            <h5>Payment Options</h5>
-                            <ul>
-                                <li>
-                                    <a href="#"> <img src="images/paypal.png" alt="Paypal"> </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <img src="images/mastercard.png" alt="Mastercard"> </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <img src="images/maestro.png" alt="Maestro"> </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <img src="images/stripe.png" alt="Stripe"> </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <img src="images/bitcoin.png" alt="Bitcoin"> </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-xs-12 col-sm-4 address color-gray">
-                                    <h5>Address</h5>
-                                    <p>Nairobi KENYA</p>
-                                    <h5>Phone: +25424700079</a></h5> </div>
-                                <div class="col-xs-12 col-sm-5 additional-info color-gray">
-                                    <h5>Addition informations</h5>
-                                   <p>Join thousands of other restaurants who benefit from having partnered with us.</p>
-                                </div>
-                    </div>
-                </div>
-       
-            </div>
-        </footer>
+            <?php
+include("footer.html");
+?>
         
     <script src="js/jquery.min.js"></script>
     <script src="js/tether.min.js"></script>
